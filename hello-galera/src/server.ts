@@ -24,6 +24,7 @@ arenas.push({ id: uuid(), nome: "Arena Ypê", zona: "Norte" });
 app.get("/arenas", (req, res) => {
   // Exemplo de filtro por parâmetros de Query String
   // No Insomnia: GET http://localhost:3000/arenas?zona=Leste
+  // No Insomnia: GET http://localhost:3000/arenas
   const { zona } = req.query;
   if (zona) {
     const arenas_filtradas = arenas.filter((arena) => arena.zona == zona);
@@ -36,6 +37,8 @@ app.get("/arenas", (req, res) => {
 app.get("/arenas/:id", (req, res) => {
   // Exemplo de uso de Parâmetro de Rota (Path Param)
   // No Insomnia: GET http://localhost:3000/01993676-512d-723f-a609-8ddf6f849e4b
+  // Usei id com formato UUID, essa sequencia alphanumérico é o id gerado para cada Arena
+
   const arena = getArenaByID(req.params.id);
   if (arena) {
     return res.json(arena);
