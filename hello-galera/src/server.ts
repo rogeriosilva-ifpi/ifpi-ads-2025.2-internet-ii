@@ -1,6 +1,10 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
 import { v7 as uuid } from "uuid";
+import { HTTPException } from "./HTTPException";
+import { router } from "./routes";
+import { validate } from "./validation_middleware";
+import { novaArenaSchema } from "./validations_schemas";
 
 const app = express();
 
@@ -19,6 +23,14 @@ interface Arena {
 const arenas: Array<Arena> = [];
 arenas.push({ id: uuid(), nome: "THE Beach", zona: "Leste" });
 arenas.push({ id: uuid(), nome: "Arena Ypê", zona: "Norte" });
+
+const middle = (req, res, next) => {
+  console.log("Hii.. MIB");
+  next();
+};
+
+// Router
+app.use("/usuarios", middle, router);
 
 // EndPoints
 app.get("/arenas", (req, res) => {
@@ -47,7 +59,7 @@ app.get("/arenas/:id", (req, res) => {
   return res.status(404).json({ detail: "Arena não localizada." });
 });
 
-app.post("/arenas", (request, response) => {
+app.post("/arenas", validate(novaArenaSchema), (request, response) => {
   const { nome, zona } = request.body;
   const arena = {
     id: uuid(),
@@ -87,6 +99,16 @@ app.post("/hello", (req, res) => {
   const body = "Received a POST request at body id ->" + horario;
 
   res.status(201).json({ headers, body });
+});
+
+// Global Error
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+  if (error instanceof HTTPException) {
+    return res.status(error.statusCode).json({
+      detail: error.detail,
+    });
+  }
+  return res.status(500).json({ global: `Aconteceu um erro global: ${error}` });
 });
 
 // Iniciar Servidor
