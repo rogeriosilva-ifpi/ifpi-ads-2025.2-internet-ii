@@ -1,93 +1,44 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
-import { v7 as uuid } from "uuid";
+import { arena_router } from "./rotas_arenas";
+import { exemplo_rotas } from "./rotas_exemplo";
+import { partidas_router } from "./rotas_partidas";
 
 const app = express();
 
 app.use(express.json());
 
-// Schemas, Modelos de API, ViewModels
-interface Arena {
-  id: string;
-  nome: string;
-  endereco?: string;
-  geolocalizacao?: string;
-  zona: string;
-}
+// Middleware
+app.use((req: Request, res: Response, next: NextFunction) => {
+  console.log("Tudo OK..");
 
-// Lista de Arenas
-const arenas: Array<Arena> = [];
-arenas.push({ id: uuid(), nome: "THE Beach", zona: "Leste" });
-arenas.push({ id: uuid(), nome: "Arena Ypê", zona: "Norte" });
+  console.log(req.query);
+
+  const { id } = req.query;
+
+  if (Number(id) > 10) {
+    res.status(400).json({ detail: "Epa, não pode" });
+  }
+
+  next();
+});
 
 // EndPoints
-app.get("/arenas", (req, res) => {
-  // Exemplo de filtro por parâmetros de Query String
-  // No Insomnia: GET http://localhost:3000/arenas?zona=Leste
-  // No Insomnia: GET http://localhost:3000/arenas
-  const { zona } = req.query;
-  if (zona) {
-    const arenas_filtradas = arenas.filter((arena) => arena.zona == zona);
-    res.status(200).json(arenas_filtradas);
-  }
-
-  return res.status(200).json(arenas);
-});
-
-app.get("/arenas/:id", (req, res) => {
-  // Exemplo de uso de Parâmetro de Rota (Path Param)
-  // No Insomnia: GET http://localhost:3000/01993676-512d-723f-a609-8ddf6f849e4b
-  // Usei id com formato UUID, essa sequencia alphanumérico é o id gerado para cada Arena
-
-  const arena = getArenaByID(req.params.id);
-  if (arena) {
-    return res.json(arena);
-  }
-
-  return res.status(404).json({ detail: "Arena não localizada." });
-});
-
-app.post("/arenas", (request, response) => {
-  const { nome, zona } = request.body;
-  const arena = {
-    id: uuid(),
-    nome,
-    zona,
-  };
-
-  arenas.push(arena);
-
-  return response.status(201).json(arena);
-});
-
-// Utils
-function getArenaByID(id: string): Arena | undefined {
-  const index = arenas.findIndex((arena) => arena.id == id);
-
-  if (index != -1) {
-    return arenas.at(index);
-  }
-  return;
+function novoUsuario(request: Request, response: Response) {
+  // Faço o trabalho. obtenho os dado do REQUEST
+  //...
+  return response.status(200).json({ mensagem: "Tudo ok" });
 }
+app.post("/usuarios", novoUsuario);
 
-// Endpoints de Exemplos
-app.get("/hello/:id", (req, res) => {
-  const headers =
-    "Received a request header ->" + req.headers["user-agent"] + "\n";
-  const query = "Received a request at Query (name) ->" + req.query.name + "\n";
-  const params = "Received a request at Params (id)->" + req.params.id + "\n";
+// Incluir as Rotas de Partidas
+app.use("/partidas", partidas_router);
 
-  res.status(200).json({ headers, query, params });
-});
+// Incluir as Rotas de Arena
+app.use("/arenas", arena_router);
 
-app.post("/hello", (req, res) => {
-  const { horario } = req.body as { horario: string };
-  const headers =
-    "Received a request header ->" + req.headers["user-agent"] + "\n";
-  const body = "Received a POST request at body id ->" + horario;
-
-  res.status(201).json({ headers, body });
-});
+// Rotas de Exemplo
+app.use(exemplo_rotas);
 
 // Iniciar Servidor
 const PORT = 3000;
