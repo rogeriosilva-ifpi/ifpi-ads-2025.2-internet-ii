@@ -1,8 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
-import { arena_router } from "./rotas_arenas";
-import { exemplo_rotas } from "./rotas_exemplo";
-import { partidas_router } from "./rotas_partidas";
+import { routes } from "./presentation/routes";
 
 const app = express();
 
@@ -23,22 +21,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 });
 
-// EndPoints
-function novoUsuario(request: Request, response: Response) {
-  // Faço o trabalho. obtenho os dado do REQUEST
-  //...
-  return response.status(200).json({ mensagem: "Tudo ok" });
-}
-app.post("/usuarios", novoUsuario);
-
-// Incluir as Rotas de Partidas
-app.use("/partidas", partidas_router);
-
-// Incluir as Rotas de Arena
-app.use("/arenas", arena_router);
-
-// Rotas de Exemplo
-app.use(exemplo_rotas);
+// Adicionar Roteadores
+app.use(routes);
 
 // Iniciar Servidor
 const PORT = 3000;
