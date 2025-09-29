@@ -3,10 +3,9 @@ import "reflect-metadata";
 import './infrastructure/ioc'
 import { v7 as uuid } from "uuid";
 import { HTTPException } from "./HTTPException";
-import { router } from "./routes";
 import { validate } from "./validation_middleware";
 import { novaArenaSchema } from "./validations_schemas";
-import { areanas_router } from "./presentation/arenas.routes";
+import { routes } from "./presentation/routes";
 
 
 const app = express();
@@ -33,7 +32,8 @@ const middle = (req, res, next) => {
 };
 
 // Router
-app.use("/usuarios", middle, router);
+app.use(routes)
+app.use("/usuarios", middle, (req, res) => {res.json({ok:'ok'})});
 
 const my_middleware = (req, res, next) => {
   console.log('Query Params: ', JSON.stringify(req.query))
@@ -44,7 +44,6 @@ const my_middleware = (req, res, next) => {
 
 app.use(my_middleware)
 
-app.use(areanas_router)
 
 // EndPoints
 app.get("/arenas", my_middleware, (req, res) => {
