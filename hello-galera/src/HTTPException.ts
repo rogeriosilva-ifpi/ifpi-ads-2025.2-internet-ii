@@ -1,9 +1,9 @@
 export class HTTPException {
   public readonly statusCode: number;
-  public readonly detail: string;
+  public readonly message: string;
 
-  constructor(statusCode: number, detail: string) {
-    this.detail = detail;
+  constructor(statusCode: number, message: string) {
+    this.message = message;
     this.statusCode = statusCode;
   }
 }
