@@ -1,4 +1,3 @@
-import { injectable } from "tsyringe";
 import { ArenaRepository } from "../application/repositories/arena.repository";
 
 

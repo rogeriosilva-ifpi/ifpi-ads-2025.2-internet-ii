@@ -1,10 +1,10 @@
 import { Router } from "express";
 import { arenas_router } from "./arenas.routes";
-import { commum_routes } from "./example.routes";
+import { commom_routes } from "./commom.routes";
 
 const router = Router()
 
-router.use(arenas_router)
-router.use(commum_routes)
+router.use('/arenas', arenas_router)
+router.use('/commom', commom_routes)
 
 export {router as routes}

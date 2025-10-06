@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { z, ZodError } from "zod";
-import { HTTPException } from "./HTTPException";
+import { HTTPException } from "../../HTTPException";
+
 
 export const validate = (schema: z.ZodObject) => {
   return (req: Request, res: Response, next: NextFunction) => {

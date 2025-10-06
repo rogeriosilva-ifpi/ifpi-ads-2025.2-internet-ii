@@ -1,11 +1,13 @@
 import {Router} from 'express'
 import { container } from 'tsyringe'
-import { ArenaController } from '../arena.controller'
+import { ArenaController } from '../controllers/arena.controller'
+
 
 const router = Router()
 
 const controler = container.resolve(ArenaController)
 
-router.get('/arenas2', controler.allArenas)
+router.get('/', controler.allArenas)
+router.get('/:id', controler.getArenaById)
 
 export { router as arenas_router }
