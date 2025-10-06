@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import { v7 as uuid } from "uuid"; // ULID
 import { ArenasService } from "../../application/ArenasService";
 import { GetAllArenasQuery } from "../../application/get-all-arenas.query";
+import { GetArenaById } from "../../application/get_arena_by_id";
+import { HTTPException } from "../exceptions/HTTPException";
 
 export class ArenasController {
   constructor(private arenaService: ArenasService) {}
@@ -18,17 +20,21 @@ export class ArenasController {
     return res.status(200).json(arenas);
   };
 
+  public getAll3 = async (req: Request, res: Response) => {
+    const { zona } = req.query;
+
+    throw new HTTPException("Tá tudo ok, amigo.", 400);
+
+    const arenas = new GetAllArenasQuery().execute();
+    return res.status(200).json(arenas);
+  };
+
   public findById = async (req: Request, res: Response) => {
-    // Exemplo de uso de Parâmetro de Rota (Path Param)
-    // No Insomnia: GET http://localhost:3000/01993676-512d-723f-a609-8ddf6f849e4b
-    // Usei id com formato UUID, essa sequencia alphanumérico é o id gerado para cada Arena
+    const id = Number(req.params.id);
 
-    const arena = getArenaByID(req.params.id);
-    if (arena) {
-      return res.json(arena);
-    }
+    const service = new GetArenaById();
 
-    return res.status(404).json({ detail: "Arena não localizada." });
+    return res.status(200).json(service.execute(id));
   };
 
   public createOne = async (request: Request, response: Response) => {
