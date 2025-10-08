@@ -10,11 +10,6 @@ const app = express();
 app.use(express.json());
 
 
-const middle = (req, res, next) => {
-  console.log("Hii.. MIB");
-  next();
-};
-
 // Router
 app.use(routes)
 

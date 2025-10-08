@@ -4,12 +4,15 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts"
+    "dev": "ts-node-dev --transpile-only --ignore-watch node_modules src/server.ts",
+    "typeorm": "ts-node ./node_modules/.bin/typeorm -d ./src/data-source.ts"
   },
   "dependencies": {
     "express": "^5.1.0",
+    "pg": "^8.16.3",
     "reflect-metadata": "^0.2.2",
     "tsyringe": "^4.10.0",
+    "typeorm": "^0.3.27",
     "uuid": "^13.0.0",
     "zod": "^4.1.8"
   },

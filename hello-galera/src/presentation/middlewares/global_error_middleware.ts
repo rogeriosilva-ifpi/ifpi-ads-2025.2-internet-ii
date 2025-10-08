@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { BusinessValidationException } from "../../application/exception/BusinessValidationException"
 import { EntityNotFoundException } from "../../application/exception/EntityNotFoundException"
 import { HTTPException } from "../../HTTPException"
+import { DomainException } from "../../application/exception/DomainException"
 
 export const global_error_middleware = (error: Error, req: Request, res: Response, next: NextFunction) => {
 
@@ -16,6 +17,9 @@ export const global_error_middleware = (error: Error, req: Request, res: Respons
     detail = error.message
   }else if (error instanceof HTTPException) {
     statusCode = error.statusCode
+    detail = error.message
+  }else if (error instanceof DomainException){
+    statusCode = 400
     detail = error.message
   }
 

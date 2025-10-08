@@ -24,6 +24,8 @@
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
 
+    "strictPropertyInitialization": false,
+
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
